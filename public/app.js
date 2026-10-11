@@ -41,14 +41,18 @@
   /* ---------- Year ---------- */
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  /* ---------- Scroll ---------- */
-  const onScroll = () => {
-    const y = window.scrollY;
-    const max = document.documentElement.scrollHeight - window.innerHeight;
-    const pct = max > 0 ? (y / max) * 100 : 0;
+  /* ---------- Scroll (rAF-throttled, dynamic progress) ---------- */
+  let ticking = false;
+
+  const updateScrollUI = () => {
+    const y = window.scrollY || window.pageYOffset;
+    const doc = document.documentElement;
+    const max = Math.max(doc.scrollHeight - window.innerHeight, 0);
+    const ratio = max > 0 ? Math.min(Math.max(y / max, 0), 1) : 0;
+    const pct = ratio * 100;
 
     if (scrollProgress) {
-      scrollProgress.style.width = pct + '%';
+      scrollProgress.style.transform = 'scaleX(' + ratio + ')';
       scrollProgress.setAttribute('aria-valuenow', Math.round(pct));
     }
 
@@ -63,10 +67,20 @@
     document.querySelectorAll('.nav-link').forEach((link) => {
       link.classList.toggle('active', link.getAttribute('href') === '#' + current);
     });
+
+    ticking = false;
+  };
+
+  const onScroll = () => {
+    if (!ticking) {
+      window.requestAnimationFrame(updateScrollUI);
+      ticking = true;
+    }
   };
 
   window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+  window.addEventListener('resize', onScroll, { passive: true });
+  updateScrollUI();
 
   /* ---------- Mobile nav ---------- */
   navToggle?.addEventListener('click', () => {
@@ -90,20 +104,28 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
-  /* ---------- Reveal ---------- */
+  /* ---------- Reveal (IntersectionObserver) ---------- */
+  const prefersReduced =
+    window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   const reveals = document.querySelectorAll('.reveal');
-  const io = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          io.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.12, rootMargin: '0px 0px -30px 0px' }
-  );
-  reveals.forEach((el) => io.observe(el));
+
+  if (prefersReduced) {
+    reveals.forEach((el) => el.classList.add('visible'));
+  } else {
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -24px 0px' }
+    );
+    reveals.forEach((el) => io.observe(el));
+  }
 
   /* ---------- Contact form ---------- */
   contactForm?.addEventListener('submit', (e) => {

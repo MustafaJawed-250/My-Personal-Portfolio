@@ -117,10 +117,14 @@ h1, h2, h3, .hero-title, .section-title, .project-title, .website-title, .video-
   top: 0;
   left: 0;
   height: 2px;
-  width: 0%;
+  width: 100%;
   background: var(--progress);
   z-index: 1000;
-  transition: width 0.08s linear, background-color 0.45s ease;
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform;
+  transition: background-color 0.45s ease;
+  pointer-events: none;
 }
 
 /* ---------- Navbar ---------- */
@@ -174,12 +178,37 @@ h1, h2, h3, .hero-title, .section-title, .project-title, .website-title, .video-
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--text-muted);
-  transition: color 0.25s ease;
+  position: relative;
+  transition: color 0.3s ease;
 }
 
-.nav-link:hover,
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 1px;
+  background: var(--text);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.3s ease;
+}
+
+.nav-link:hover {
+  color: var(--text);
+}
+
+.nav-link:hover::after {
+  transform: scaleX(0.55);
+}
+
 .nav-link.active {
   color: var(--text);
+}
+
+.nav-link.active::after {
+  transform: scaleX(1);
 }
 
 .nav-actions {
@@ -197,12 +226,21 @@ h1, h2, h3, .hero-title, .section-title, .project-title, .website-title, .video-
   border-radius: 50%;
   border: 1px solid var(--border);
   color: var(--text);
-  transition: border-color 0.25s, background 0.25s;
+  transition: border-color 0.3s ease, background 0.3s ease, transform 0.35s ease;
 }
 
 .theme-toggle:hover {
   border-color: var(--border-strong);
   background: var(--bg-soft);
+  transform: rotate(18deg);
+}
+
+.theme-toggle:active {
+  transform: rotate(28deg) scale(0.94);
+}
+
+.theme-toggle svg {
+  transition: opacity 0.3s ease, transform 0.35s ease;
 }
 
 [data-theme="navy"] .icon-sun { display: none; }
@@ -350,11 +388,13 @@ h1, h2, h3, .hero-title, .section-title, .project-title, .website-title, .video-
 .meta-socials a {
   font-size: 0.88rem;
   color: var(--text-muted);
-  transition: color 0.25s;
+  transition: color 0.3s ease, transform 0.3s ease;
+  display: inline-block;
 }
 
 .meta-socials a:hover {
   color: var(--text);
+  transform: translateX(3px);
 }
 
 /* ---------- Buttons ---------- */
@@ -367,7 +407,13 @@ h1, h2, h3, .hero-title, .section-title, .project-title, .website-title, .video-
   font-weight: 500;
   letter-spacing: 0.02em;
   border-radius: 2px;
-  transition: background 0.25s, color 0.25s, border-color 0.25s, transform 0.2s;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s ease,
+    opacity 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .btn-primary {
@@ -376,8 +422,12 @@ h1, h2, h3, .hero-title, .section-title, .project-title, .website-title, .video-
 }
 
 .btn-primary:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
+  opacity: 0.92;
+  transform: translateY(-2px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
 }
 
 .btn-ghost {
@@ -387,6 +437,11 @@ h1, h2, h3, .hero-title, .section-title, .project-title, .website-title, .video-
 
 .btn-ghost:hover {
   border-color: var(--text);
+  transform: translateY(-2px);
+}
+
+.btn-ghost:active {
+  transform: translateY(0);
 }
 
 /* ---------- About ---------- */
@@ -438,6 +493,7 @@ h1, h2, h3, .hero-title, .section-title, .project-title, .website-title, .video-
   align-items: center;
   padding-bottom: 4rem;
   border-bottom: 1px solid var(--border);
+  transition: border-color 0.35s ease;
 }
 
 .project-card:last-child {
@@ -450,12 +506,23 @@ h1, h2, h3, .hero-title, .section-title, .project-title, .website-title, .video-
   border: 1px solid var(--border);
   overflow: hidden;
   aspect-ratio: 16 / 10;
+  transition: border-color 0.35s ease, transform 0.45s ease;
+}
+
+.project-card:hover .project-media {
+  border-color: var(--border-strong);
+  transform: translateY(-3px);
 }
 
 .project-media video {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.project-card:hover .project-media video {
+  transform: scale(1.02);
 }
 
 .project-cat {
@@ -522,7 +589,7 @@ h1, h2, h3, .hero-title, .section-title, .project-title, .website-title, .video-
   padding: 1.75rem 1.5rem;
   background: var(--bg-elevated);
   border: 1px solid var(--border);
-  transition: border-color 0.3s, transform 0.3s;
+  transition: border-color 0.35s ease, transform 0.35s ease, background-color 0.45s ease;
   display: flex;
   flex-direction: column;
   min-height: 200px;
@@ -530,7 +597,7 @@ h1, h2, h3, .hero-title, .section-title, .project-title, .website-title, .video-
 
 .website-card:hover {
   border-color: var(--border-strong);
-  transform: translateY(-3px);
+  transform: translateY(-4px);
 }
 
 .website-cat {
@@ -588,12 +655,14 @@ h1, h2, h3, .hero-title, .section-title, .project-title, .website-title, .video-
 .video-title {
   font-size: 1.3rem;
   margin-bottom: 0.35rem;
+  transition: transform 0.35s ease, opacity 0.35s ease;
 }
 
 .video-desc {
   font-size: 0.88rem;
   color: var(--text-muted);
   margin-bottom: 1rem;
+  transition: color 0.3s ease;
 }
 
 .video-frame {
@@ -601,17 +670,27 @@ h1, h2, h3, .hero-title, .section-title, .project-title, .website-title, .video-
   border: 1px solid var(--border);
   aspect-ratio: 16 / 9;
   overflow: hidden;
-  transition: border-color 0.3s;
+  transition: border-color 0.35s ease, transform 0.4s ease;
 }
 
 .video-card:hover .video-frame {
   border-color: var(--border-strong);
+  transform: translateY(-3px);
+}
+
+.video-card:hover .video-title {
+  transform: translateX(2px);
 }
 
 .video-frame video {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.video-card:hover .video-frame video {
+  transform: scale(1.02);
 }
 
 /* ---------- Contact ---------- */
@@ -629,11 +708,12 @@ h1, h2, h3, .hero-title, .section-title, .project-title, .website-title, .video-
   margin-bottom: 1.5rem;
   border-bottom: 1px solid var(--border-strong);
   padding-bottom: 4px;
-  transition: border-color 0.25s;
+  transition: border-color 0.3s ease, transform 0.3s ease;
 }
 
 .contact-email:hover {
   border-color: var(--text);
+  transform: translateY(-1px);
 }
 
 .contact-row {
@@ -645,11 +725,13 @@ h1, h2, h3, .hero-title, .section-title, .project-title, .website-title, .video-
 .contact-row a {
   font-size: 0.9rem;
   color: var(--text-muted);
-  transition: color 0.25s;
+  transition: color 0.3s ease, transform 0.3s ease;
+  display: inline-block;
 }
 
 .contact-row a:hover {
   color: var(--text);
+  transform: translateY(-2px);
 }
 
 .contact-form {
@@ -673,7 +755,7 @@ h1, h2, h3, .hero-title, .section-title, .project-title, .website-title, .video-
   padding: 0.75rem 0;
   border-bottom: 1px solid var(--border);
   color: var(--text);
-  transition: border-color 0.25s;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
   border-radius: 0;
 }
 
@@ -681,6 +763,17 @@ h1, h2, h3, .hero-title, .section-title, .project-title, .website-title, .video-
 .field textarea:focus {
   border-bottom-color: var(--text);
   outline: none;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--text-faint);
+  transition: opacity 0.3s ease;
+}
+
+.field input:focus::placeholder,
+.field textarea:focus::placeholder {
+  opacity: 0.55;
 }
 
 .field textarea {
@@ -729,8 +822,13 @@ h1, h2, h3, .hero-title, .section-title, .project-title, .website-title, .video-
   color: var(--text);
   opacity: 0;
   visibility: hidden;
-  transform: translateY(8px);
-  transition: opacity 0.3s, visibility 0.3s, transform 0.3s, border-color 0.25s;
+  transform: translateY(10px);
+  transition:
+    opacity 0.35s ease,
+    visibility 0.35s ease,
+    transform 0.35s ease,
+    border-color 0.3s ease,
+    background-color 0.45s ease;
   z-index: 800;
 }
 
@@ -742,6 +840,7 @@ h1, h2, h3, .hero-title, .section-title, .project-title, .website-title, .video-
 
 .back-top:hover {
   border-color: var(--border-strong);
+  transform: translateY(-2px);
 }
 
 /* ---------- Chatbot ---------- */
@@ -762,11 +861,15 @@ h1, h2, h3, .hero-title, .section-title, .project-title, .website-title, .video-
   align-items: center;
   justify-content: center;
   box-shadow: var(--shadow);
-  transition: transform 0.25s, opacity 0.25s;
+  transition: transform 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease;
 }
 
 .chatbot-btn:hover {
-  transform: scale(1.05);
+  transform: scale(1.06) translateY(-1px);
+}
+
+.chatbot-btn:active {
+  transform: scale(0.97);
 }
 
 .chatbot-btn .icon-close { display: none; }
@@ -787,15 +890,21 @@ h1, h2, h3, .hero-title, .section-title, .project-title, .website-title, .video-
   flex-direction: column;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(12px);
-  transition: opacity 0.3s, visibility 0.3s, transform 0.3s, background 0.45s, border-color 0.45s;
+  transform: translateY(14px) scale(0.98);
+  transform-origin: bottom left;
+  transition:
+    opacity 0.35s ease,
+    visibility 0.35s ease,
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.45s ease,
+    border-color 0.45s ease;
   overflow: hidden;
 }
 
 .chatbot-panel.open {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
 }
 
 .chatbot-head {
@@ -910,13 +1019,67 @@ h1, h2, h3, .hero-title, .section-title, .project-title, .website-title, .video-
 /* ---------- Reveal ---------- */
 .reveal {
   opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
+  transform: translateY(18px) scale(0.99);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
 }
 
 .reveal.visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
+}
+
+/* Hero staggered entrance */
+.hero-copy .reveal:nth-child(1) { transition-delay: 0.05s; }
+.hero-copy .reveal:nth-child(2) { transition-delay: 0.14s; }
+.hero-copy .reveal:nth-child(3) { transition-delay: 0.24s; }
+.hero-copy .reveal:nth-child(4) { transition-delay: 0.34s; }
+.hero-meta.reveal { transition-delay: 0.42s; }
+
+/* Grouped cards — shared stagger, works for any number of copied blocks */
+.projects-list .project-card.reveal:nth-child(1) { transition-delay: 0.06s; }
+.projects-list .project-card.reveal:nth-child(2) { transition-delay: 0.14s; }
+.projects-list .project-card.reveal:nth-child(3) { transition-delay: 0.22s; }
+.projects-list .project-card.reveal:nth-child(4) { transition-delay: 0.3s; }
+.projects-list .project-card.reveal:nth-child(5) { transition-delay: 0.38s; }
+.projects-list .project-card.reveal:nth-child(n+6) { transition-delay: 0.44s; }
+
+.websites-grid .website-card.reveal:nth-child(1) { transition-delay: 0.05s; }
+.websites-grid .website-card.reveal:nth-child(2) { transition-delay: 0.1s; }
+.websites-grid .website-card.reveal:nth-child(3) { transition-delay: 0.15s; }
+.websites-grid .website-card.reveal:nth-child(4) { transition-delay: 0.2s; }
+.websites-grid .website-card.reveal:nth-child(5) { transition-delay: 0.25s; }
+.websites-grid .website-card.reveal:nth-child(n+6) { transition-delay: 0.3s; }
+
+.videos-grid .video-card.reveal:nth-child(1) { transition-delay: 0.06s; }
+.videos-grid .video-card.reveal:nth-child(2) { transition-delay: 0.14s; }
+.videos-grid .video-card.reveal:nth-child(3) { transition-delay: 0.22s; }
+.videos-grid .video-card.reveal:nth-child(n+4) { transition-delay: 0.28s; }
+
+/* Subtle hero ambient line */
+.hero {
+  position: relative;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  width: 1px;
+  height: 36px;
+  background: linear-gradient(to bottom, var(--border-strong), transparent);
+  transform: translateX(-50%);
+  animation: scrollHint 2.2s ease-in-out infinite;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+@keyframes scrollHint {
+  0%, 100% { opacity: 0.25; transform: translateX(-50%) translateY(0); }
+  50% { opacity: 0.75; transform: translateX(-50%) translateY(6px); }
 }
 
 /* ---------- Responsive ---------- */
@@ -1013,6 +1176,18 @@ h1, h2, h3, .hero-title, .section-title, .project-title, .website-title, .video-
 
   .reveal {
     opacity: 1;
+    transform: none;
+    transition-delay: 0s !important;
+  }
+
+  .hero::after {
+    display: none;
+  }
+
+  .project-card:hover .project-media,
+  .project-card:hover .project-media video,
+  .video-card:hover .video-frame,
+  .video-card:hover .video-frame video {
     transform: none;
   }
 
