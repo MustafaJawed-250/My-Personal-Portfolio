@@ -4,28 +4,18 @@
   "description": "Premium Navy & Cream portfolio — Muhammad Mustafa Jawed, AI Web Developer",
   "main": "server.js",
   "scripts": {
-    "dev": "node --watch server.js",
-    "start": "node server.js",
-    "build": "parcel build public/index.html --dist-dir dist --public-url /",
-    "parcel:dev": "parcel public/index.html --port 1234"
+    "start": "node --watch server.js",
+    "dev": "node server.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
-    "dotenv": "^16.6.1",
-    "express": "^4.22.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
     "express-rate-limit": "^7.4.0"
-  },
-  "devDependencies": {
-    "parcel": "^2.12.0"
   },
   "engines": {
     "node": ">=18"
   },
-  "keywords": [
-    "portfolio",
-    "ai",
-    "web-developer"
-  ],
   "author": "Muhammad Mustafa Jawed",
   "license": "MIT"
 }
